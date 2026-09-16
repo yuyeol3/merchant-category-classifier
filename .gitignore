@@ -6,6 +6,11 @@
 *.xlsx
 data/
 
+# 단, 개인정보 아닌 하네스용 CSV(합성 예시 / 빈 템플릿)만 허용
+!eval/predictions_example.csv
+!eval/labels_template.csv
+# eval/predictions_seed.csv(실제 카드 상호)는 위 *.csv 로 계속 제외된다
+
 # 개인 금융데이터는 절대 커밋 금지(카드/계좌 내역)
 *card*
 *카드*

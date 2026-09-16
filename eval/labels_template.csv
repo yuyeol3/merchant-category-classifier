@@ -1,0 +1,3 @@
+merchant,gold,rule_pred,clf_pred,clf_p,ambiguous,note
+# merchant=카드 상호 문자열, gold=정답 32-cat, rule_pred=규칙예측(빈칸/uncertain=미해소),
+# clf_pred=분류기예측, clf_p=분류기확률, ambiguous=1이면 정답애매, note=메모
