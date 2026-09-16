@@ -66,5 +66,6 @@
 ## 파일
 
 - `evaluate.py` — 예측 CSV → 전략별 지표 + 임계값 스윕.
+- `threshold_explore.py` — 하이브리드 confidence cutoff 촘촘히 탐색(정밀도 목표별 최적 th).
 - `predictions_example.csv` — 합성 예시(3-way 예측 채워짐). `python evaluate.py`로 바로 실행.
 - `labels_template.csv` — 라벨링 시작 틀.
