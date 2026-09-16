@@ -9,6 +9,9 @@
 
 > 📄 **규칙 vs 하이브리드 비교 결과와 근거는 [REPORT.md](REPORT.md) 참고.**
 > (실제 카드셋에서 정확도 0.60 → 0.82, 커버리지 63% → 100%, confidence cutoff ≈ 0.45)
+>
+> 🏗️ **분류 파이프라인 제안(다이어그램 포함)은 [ARCHITECTURE.md](ARCHITECTURE.md) 참고.**
+> (캐시 → 규칙 → 상가업소 API → 분류기 → review → write-back)
 
 ## 방법
 
