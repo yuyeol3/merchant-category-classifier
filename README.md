@@ -65,13 +65,28 @@ python train.py --zip "소상공인시장진흥공단_상가(상권)정보_YYYYM
 # 상권 대분류(10클래스)
 python train.py --zip DATA.zip --level major
 
-# 임의 CSV(raw_merchant 컬럼)에 예측 찍어보기
+# 임의 CSV(raw_merchant 컬럼)에 예측 찍어보기(1회성)
 python train.py --zip DATA.zip --level middle --map32 --predict merchants.csv
 ```
 
+### 모델 저장 후 반복 예측 (재학습 없이 수초)
+
+매번 학습(수분)하지 말고, 한 번 저장해 로드한다:
+
+```bash
+# 1회: 학습 후 저장
+python train.py --zip DATA.zip --level middle --save-model model.joblib
+
+# 이후 반복: 로드해서 예측만(수초)
+python predict.py --model model.joblib --input merchants.csv -o out.csv
+```
+
+> 모델은 해시 2^20이라 수백 MB다 → **로컬 캐시**로만 쓰고 커밋하지 않는다(`.gitignore`).
+
 ## 파일
 
-- `train.py` — 스트리밍 로딩 / 학습 / 평가 / 32-cat 매핑 / 예측 CLI.
+- `train.py` — 스트리밍 로딩 / 학습 / 평가 / 32-cat 매핑 / 모델 저장 CLI.
+- `predict.py` — 저장된 모델 로드 → CSV 예측(재학습 없음).
 - `mapping.py` — 상권 중분류(75) → 32-cat 매핑표 + 도달 가능/불가 목록.
 
 ## 라이선스 / 데이터

@@ -23,6 +23,7 @@ import time
 import zipfile
 from collections import Counter, defaultdict
 
+import joblib
 import numpy as np
 from sklearn.feature_extraction.text import HashingVectorizer
 from sklearn.linear_model import SGDClassifier
@@ -30,6 +31,14 @@ from sklearn.metrics import accuracy_score, classification_report, f1_score
 from sklearn.model_selection import train_test_split
 
 import mapping
+
+# 해시/ngram 파라미터는 저장·로드 양쪽에서 동일해야 한다(HashingVectorizer는 stateless).
+VEC_PARAMS = dict(analyzer="char_wb", ngram_range=(2, 4),
+                  n_features=2 ** 20, alternate_sign=False, norm="l2")
+
+
+def build_vectorizer():
+    return HashingVectorizer(**VEC_PARAMS)
 
 # 상가정보 CSV 컬럼 인덱스(0-based)
 COL_NAME = 1   # 상호명
@@ -68,10 +77,7 @@ def build_dataset(zip_path: str, label_col: int):
 
 
 def make_pipeline():
-    vec = HashingVectorizer(
-        analyzer="char_wb", ngram_range=(2, 4),
-        n_features=2 ** 20, alternate_sign=False, norm="l2",
-    )
+    vec = build_vectorizer()
     clf = SGDClassifier(
         loss="log_loss", alpha=1e-6, max_iter=20, tol=1e-4,
         n_jobs=-1, random_state=42,
@@ -89,6 +95,7 @@ def main():
     ap.add_argument("--predict", help="예측을 찍어볼 CSV(raw_merchant 컬럼)")
     ap.add_argument("--min-count", type=int, default=10,
                     help="stratify를 위한 클래스 최소 표본 수")
+    ap.add_argument("--save-model", help="학습된 분류기를 이 경로에 저장(재학습 불필요, predict.py에서 로드)")
     args = ap.parse_args()
 
     label_col = COL_MAJOR if args.level == "major" else COL_MIDDLE
@@ -109,6 +116,11 @@ def main():
     vec, clf = make_pipeline()
     clf.fit(vec.transform(Xtr), ytr)
     print(f"[train] done {time.time()-t0:.0f}s", flush=True)
+
+    if args.save_model:
+        joblib.dump({"clf": clf, "level": args.level, "vec_params": VEC_PARAMS},
+                    args.save_model, compress=3)
+        print(f"[save] {args.save_model}", flush=True)
 
     pred = clf.predict(vec.transform(Xte))
     print(f"\n===== [{args.level}] in-domain 성능 =====")
