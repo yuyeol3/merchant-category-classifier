@@ -1,0 +1,23 @@
+# 데이터셋(대용량 공개 데이터 — 커밋하지 않음, README의 출처에서 받을 것)
+*.zip
+*.csv
+*.tsv
+*.xls
+*.xlsx
+data/
+
+# 개인 금융데이터는 절대 커밋 금지(카드/계좌 내역)
+*card*
+*카드*
+*거래내역*
+
+# 학습 산출물
+*.pkl
+*.joblib
+*.log
+
+# python
+__pycache__/
+*.pyc
+.venv/
+venv/
